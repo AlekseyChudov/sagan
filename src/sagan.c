@@ -179,6 +179,7 @@ int main(int argc, char **argv)
 
     sbool fifoerr=0;
 
+    char *syslog_from=NULL;
     char *syslog_host=NULL;
     char *syslog_facility=NULL;
     char *syslog_priority=NULL;
@@ -767,7 +768,22 @@ int main(int argc, char **argv)
 
                             counters->sagantotal++;
 
-                            syslog_host = strtok_r(syslogstring, "|", &tok);
+                            syslog_from = strtok_r(syslogstring, "|", &tok);
+                            if ( syslog_from == NULL )
+                                {
+                                    syslog_from = "SAGAN: FROM ERROR";
+
+                                    pthread_mutex_lock(&SaganMalformedCounter);
+                                    counters->malformed_facility++;
+                                    pthread_mutex_unlock(&SaganMalformedCounter);
+
+                                    if ( debug->debugmalformed )
+                                        {
+                                            Sagan_Log(S_WARN, "Sagan received a malformed 'from'");
+                                        }
+                                }
+
+                            syslog_host = strtok_r(NULL, "|", &tok);
 
                             /* If we're using DNS (and we shouldn't be!),  we start DNS checks and lookups
                              * here.  We cache both good and bad lookups to not over load our DNS server(s).
@@ -981,6 +997,7 @@ int main(int argc, char **argv)
 
                                     pthread_mutex_lock(&SaganProcWorkMutex);
 
+                                    strlcpy(SaganProcSyslog[proc_msgslot].syslog_from, syslog_from, sizeof(SaganProcSyslog[proc_msgslot].syslog_from));
                                     strlcpy(SaganProcSyslog[proc_msgslot].syslog_host, syslog_host, sizeof(SaganProcSyslog[proc_msgslot].syslog_host));
                                     strlcpy(SaganProcSyslog[proc_msgslot].syslog_facility, syslog_facility, sizeof(SaganProcSyslog[proc_msgslot].syslog_facility));
                                     strlcpy(SaganProcSyslog[proc_msgslot].syslog_priority, syslog_priority, sizeof(SaganProcSyslog[proc_msgslot].syslog_priority));
@@ -1008,7 +1025,7 @@ int main(int argc, char **argv)
                                 {
 
                                     Sagan_Log(S_DEBUG, "[%s, line %d] **[RAW Syslog]*********************************", __FILE__, __LINE__);
-                                    Sagan_Log(S_DEBUG, "[%s, line %d] Host: %s | Program: %s | Facility: %s | Priority: %s | Level: %s | Tag: %s", __FILE__, __LINE__, syslog_host, syslog_program, syslog_facility, syslog_priority, syslog_level, syslog_tag);
+                                    Sagan_Log(S_DEBUG, "[%s, line %d] From: %s | Host: %s | Program: %s | Facility: %s | Priority: %s | Level: %s | Tag: %s", __FILE__, __LINE__, syslog_from, syslog_host, syslog_program, syslog_facility, syslog_priority, syslog_level, syslog_tag);
                                     Sagan_Log(S_DEBUG, "[%s, line %d] Raw message: %s", __FILE__, __LINE__, syslog_msg);
 
                                 }

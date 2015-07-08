@@ -76,6 +76,7 @@ void Sagan_Send_Alert ( _SaganProcSyslog *SaganProcSyslog_LOCAL, _Sagan_Processo
     snprintf(tmp, sizeof(tmp)-1, "%d", alertid);
     SaganProcessorEvent->sid             =       tmp;
 
+    SaganProcessorEvent->from		 = 	 SaganProcSyslog_LOCAL->syslog_from;
     SaganProcessorEvent->host		 = 	 SaganProcSyslog_LOCAL->syslog_host;
     SaganProcessorEvent->time            =       SaganProcSyslog_LOCAL->syslog_time;
     SaganProcessorEvent->date            =       SaganProcSyslog_LOCAL->syslog_date;

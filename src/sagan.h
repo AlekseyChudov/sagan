@@ -228,6 +228,7 @@ struct _SaganDebug
 
 typedef struct _Sagan_Proc_Syslog
 {
+    char syslog_from[50];
     char syslog_host[50];
     char syslog_facility[50];
     char syslog_priority[50];
@@ -264,6 +265,7 @@ typedef struct _Sagan_Event
     char *date;
 
     char *priority;         /* Syslog priority */
+    char *from;
     char *host;
     char *facility;
     char *level;

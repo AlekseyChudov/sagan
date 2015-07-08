@@ -81,6 +81,7 @@ void Sagan_Processor ( void )
             proc_msgslot--;	/* This was ++ before coming over, so we now -- it to get to
 					 * original value */
 
+            strlcpy(SaganProcSyslog_LOCAL->syslog_from, SaganProcSyslog[proc_msgslot].syslog_from, sizeof(SaganProcSyslog_LOCAL->syslog_from));
             strlcpy(SaganProcSyslog_LOCAL->syslog_host, SaganProcSyslog[proc_msgslot].syslog_host, sizeof(SaganProcSyslog_LOCAL->syslog_host));
             strlcpy(SaganProcSyslog_LOCAL->syslog_facility, SaganProcSyslog[proc_msgslot].syslog_facility, sizeof(SaganProcSyslog_LOCAL->syslog_facility));
             strlcpy(SaganProcSyslog_LOCAL->syslog_priority, SaganProcSyslog[proc_msgslot].syslog_priority, sizeof(SaganProcSyslog_LOCAL->syslog_priority));

@@ -407,7 +407,7 @@ int Sagan_Engine ( _SaganProcSyslog *SaganProcSyslog_LOCAL )
 
                                     rc = pcre_exec( rulestruct[b].re_pcre[z], rulestruct[b].pcre_extra[z], SaganProcSyslog_LOCAL->syslog_message, (int)strlen(SaganProcSyslog_LOCAL->syslog_message), 0, 0, ovector, PCRE_OVECCOUNT);
 
-                                    if ( rc == 1 ) sagan_match++;
+                                    if ( rc > 0 ) sagan_match++;
 
                                 }  /* End of pcre if */
                         }
